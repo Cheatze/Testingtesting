@@ -7,6 +7,7 @@ use Cheatze\Library\Author;
 use Cheatze\Library\BookRepository;
 use Cheatze\Library\Main;
 
+use function PHPUnit\Framework\assertEquals;
 use function PHPUnit\Framework\assertSame;
 
 class BookRepositoryTest extends TestCase
@@ -18,6 +19,7 @@ class BookRepositoryTest extends TestCase
         $this->assertEquals(1, $author->getId(), "Author id didn't start at 1");
         $this->assertEquals("Bobby Bobson", $author->getName(), 'Wrong author name');
         $this->assertEquals('1970-01-01', $author->getDateOfBirthAsString(), 'Wrong date of birth');
+
 
     }
 
@@ -34,6 +36,8 @@ class BookRepositoryTest extends TestCase
         $this->assertEquals($author, $book->getAuthor(), 'Wrong author');
         $this->assertEquals("Bobby Bobson", $book->getAuthorName(), "Wrong author name");
         $this->assertEquals('12345', $book->getIsbn(), 'Wrong ISBN');
+        $this->assertEquals(99, $book->getPagecount(), 'Wrong pagecount');
+
 
 
 
@@ -54,6 +58,12 @@ class BookRepositoryTest extends TestCase
         $this->assertEquals($book, $return, "Wrong book?");
         $returnAll = $repo->getAll();
         $this->assertTrue(is_array($returnAll), 'getAll did not return an array');
+        $filterById = $repo->filterById(1);
+        $this->assertTrue(is_array($filterById), 'Filter by id did not return an array');
+        $this->assertEquals($book, $repo->returnById(1), 'Book not returned by Id');
+        $repo->removeById(1);
+        $removeCheck = $repo->checkForId(1);
+        assertEquals($removeCheck, false, 'Book not removed');
 
     }
 
